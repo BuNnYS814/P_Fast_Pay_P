@@ -1,0 +1,88 @@
+.transaction-page {
+    padding: 2rem 0;
+}
+
+.balance-card {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 20px rgba(30, 60, 114, 0.2);
+}
+
+.balance-amount {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 1rem 0;
+}
+
+.currency {
+    font-size: 1rem;
+    opacity: 0.8;
+    margin-left: 0.5rem;
+}
+
+.transaction-form-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.modern-form .form-control {
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.modern-form .form-control:focus {
+    border-color: #1e3c72;
+    box-shadow: 0 0 0 0.2rem rgba(30, 60, 114, 0.25);
+}
+
+.submit-button {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 10px;
+    background: #4CAF50;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.submit-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+}
+
+.chart-card, .transactions-table-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.modern-table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.modern-table th {
+    background: #f8f9fa;
+    border: none;
+    padding: 1rem;
+}
+
+.modern-table td {
+    padding: 1rem;
+    border-top: 1px solid #e0e0e0;
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+} 
