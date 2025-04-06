@@ -38,17 +38,10 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
 
-        // Log the user data to check what's being sent
-        console.log('User data from DB:', {
-            email: user.email,
-            upi_id: user.upi_id,
-            balance: user.balance
-        });
-
         res.json({
             success: true,
             message: 'Login successful',
-            name: user.name,        // Include name
+            name: user.name,
             email: user.email,
             upi_id: user.upi_id,
             balance: Number(user.balance) || 0

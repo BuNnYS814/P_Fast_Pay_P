@@ -125,4 +125,35 @@
 .user-info span {
     color: white;
     font-size: 1.1em;
-} 
+}
+
+.user-info-section {
+    background-color: #f5f5f5; /* Light background for contrast */
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.user-info-section h2 {
+    margin-bottom: 10px;
+}
+
+.user-info-section p {
+    margin: 5px 0;
+    font-size: 1.1em;
+}
+
+.update-balance-button {
+    background-color: #1a237e; /* Match the user info background */
+    color: white; /* Text color */
+    padding: 10px 20px; /* Padding for the button */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+.update-balance-button:hover {
+    background-color: #303f9f; /* Darker shade on hover */
+}

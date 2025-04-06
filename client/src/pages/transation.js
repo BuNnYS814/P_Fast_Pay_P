@@ -22,14 +22,12 @@ export default function Transaction() {
     // Fetch user data and transactions on component mount
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('user'));
-        console.log('Retrieved user data:', userData); // Debug log
         if (userData) {
             setUser(userData);
-            setBalance(Number(userData.balance) || 0);
-            fetchBalance(userData.upi_id);
-            fetchTransactions(userData.upi_id);
+            setBalance(Number(userData.balance) || 0); // Set initial balance from local storage
+            fetchTransactions(userData.upi_id); // Fetch transactions
         }
-    }, []);
+    }, []); // Empty dependency array to run only once on mount
 
     // Fetch transactions for a given UPI ID
     const fetchTransactions = async (upi_id) => {
@@ -62,6 +60,7 @@ export default function Transaction() {
                 
                 // Update localStorage with new balance
                 const userData = JSON.parse(localStorage.getItem('user'));
+                console.log('User data in local storage:', userData);
                 localStorage.setItem('user', JSON.stringify({
                     ...userData,
                     balance: newBalance
@@ -75,17 +74,19 @@ export default function Transaction() {
     // Handle transaction
     const handleTransaction = async (e) => {
         e.preventDefault();
+        console.log('Amount being sent:', amount); // Log the amount
+
         try {
             const response = await axios.post('/api/transaction', {
                 sender_upi_id: user.upi_id,
-                amount: parseFloat(amount),
+                amount: parseFloat(amount), // Ensure this is a valid number
                 type: transactionType,
                 description
             });
 
             if (response.data.success) {
-                const newBalance = response.data.balance;
-                setBalance(newBalance);
+                const newBalance = response.data.balance; // Get the updated balance
+                setBalance(newBalance); // Update the state with the new balance
                 
                 // Update localStorage with new balance
                 const userData = JSON.parse(localStorage.getItem('user'));
@@ -94,12 +95,17 @@ export default function Transaction() {
                     balance: newBalance
                 }));
 
-                fetchTransactions(user.upi_id);
-                setAmount('');
+                // Log the updated user data in local storage
+                const updatedUserData = JSON.parse(localStorage.getItem('user'));
+                console.log('User data in local storage after transaction:', updatedUserData);
+
+                fetchTransactions(user.upi_id); // Fetch transactions to update the UI
+                setAmount(''); // Clear the input fields
                 setDescription('');
                 setSuccess('Transaction successful!');
             }
         } catch (error) {
+            console.error('Transaction error:', error);
             setError('Transaction failed');
         }
     };
@@ -127,6 +133,15 @@ export default function Transaction() {
         amount: t.type === 'Deposit' ? t.amount : -t.amount
     }));
 
+    // New function to update balance from local storage
+    const updateBalance = () => {
+        const userData = JSON.parse(localStorage.getItem('user'));
+        if (userData) {
+            setBalance(Number(userData.balance) || 0);
+            console.log('Balance updated from local storage:', userData.balance);
+        }
+    };
+
     return (
         <div>
             <div className="user-header">
@@ -135,19 +150,18 @@ export default function Transaction() {
                     <span>{user?.email}</span>
                 </div>
             </div>
-
+            {/* User Information Section */}
             <div className="current-balance">
-                <h2>Current Balance</h2>
-                <h3>₹{balance.toFixed(2)} INR</h3>
+                <h2>User Information</h2>
+                <p>Email: {user?.email}</p>
+                <p>UPI ID: {user?.upi_id}</p>
+                <h3>Balance: ₹{balance.toFixed(2)} INR</h3>
             </div>
+
+            
 
             <div className="dashboard-container">
                 <div className="left-panel">
-                    <div className="current-balance">
-                        <h2>Current Balance</h2>
-                        <h3>₹{balance.toFixed(2)} INR</h3>
-                    </div>
-
                     <div className="new-transaction">
                         <h3>New Transaction</h3>
                         {success && <div className="success-message">{success}</div>}
@@ -156,9 +170,9 @@ export default function Transaction() {
                         <div>
                             <label>Transaction Type</label>
                             <select 
-                                        value={transactionType}
-                                        onChange={(e) => setTransactionType(e.target.value)}
-                                    >
+                                value={transactionType}
+                                onChange={(e) => setTransactionType(e.target.value)}
+                            >
                                 <option value="Deposit">Deposit</option>
                                 <option value="Withdrawal">Withdrawal</option>
                             </select>
@@ -167,24 +181,24 @@ export default function Transaction() {
                         <div>
                             <label>Amount</label>
                             <input
-                    type="number"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                                        placeholder="Enter amount"
-                                    />
+                                type="number"
+                                value={amount}
+                                onChange={(e) => setAmount(e.target.value)}
+                                placeholder="Enter amount"
+                            />
                         </div>
 
                         <div>
                             <label>Description</label>
                             <input
-                                        type="text"
-                                        value={description}
-                                        onChange={(e) => setDescription(e.target.value)}
-                                        placeholder="Enter description"
-                                    />
+                                type="text"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                placeholder="Enter description"
+                            />
                         </div>
 
-                        <button onClick={handleTransaction}>Submit Transaction</button>
+                        <button type="submit" onClick={handleTransaction}>Submit Transaction</button>
                     </div>
                 </div>
 
@@ -207,24 +221,26 @@ export default function Transaction() {
                 <table>
                     <thead>
                         <tr>
-                                            <th>Date</th>
-                                            <th>Type</th>
+                            <th>Date</th>
+                            <th>Type</th>
                             <th>Amount</th>
-                                            <th>Description</th>
+                            <th>Description</th>
                         </tr>
                     </thead>
                     <tbody>
                         {transactions.map((transaction, index) => (
                             <tr key={index}>
                                 <td>{new Date(transaction.date).toLocaleDateString()}</td>
-                                                <td>{transaction.type}</td>
-                                                <td>₹{transaction.amount.toFixed(2)}</td>
-                                                <td>{transaction.description}</td>
+                                <td>{transaction.type}</td>
+                                <td>₹{transaction.amount.toFixed(2)}</td>
+                                <td>{transaction.description}</td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
-            </div>
+
+            <button className="update-balance-button" onClick={updateBalance}>Update Balance</button>
+        </div>
     );
 }

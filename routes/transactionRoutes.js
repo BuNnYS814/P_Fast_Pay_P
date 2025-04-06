@@ -51,6 +51,11 @@ router.post('/transaction', async (req, res) => {
             ? currentBalance + parsedAmount 
             : currentBalance - parsedAmount;
 
+        // Log the current and new balance
+        console.log('Current balance before transaction:', currentBalance);
+        console.log('Parsed amount:', parsedAmount);
+        console.log('New balance after transaction:', newBalance);
+
         // Update user's balance in database
         user.balance = newBalance;
         await user.save();
@@ -75,6 +80,32 @@ router.post('/transaction', async (req, res) => {
     } catch (error) {
         console.error('Transaction error:', error);
         res.status(500).json({ success: false, message: 'Transaction failed' });
+    }
+});
+
+// Signup route
+router.post('/signup', async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+        const upi_id = `${name.toLowerCase().replace(/\s/g, '')}@fastpay`;
+        
+        const user = new User({
+            name,
+            email,
+            password,
+            upi_id,
+            balance: 1000  // Starting balance
+        });
+
+        await user.save();
+        
+        res.json({ 
+            success: true, 
+            message: 'User registered successfully',
+            upi_id: user.upi_id
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Error creating user' });
     }
 });
 
